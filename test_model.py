@@ -45,8 +45,18 @@ def test_can_allocate_if_available_equal_to_required():
 
 
 def test_prefers_warehouse_batches_to_shipments():
-    pytest.fail("todo")
+    warehouse_batch = Batch(1, "SMALL-TABLE", 20)
+    shipment_batch = Batch(1, "SMALL-TABLE", 20, later)
+    order_line = OrderLine("SMALL-TABLE", 20)
+    allocate([warehouse_batch, shipment_batch], order_line)
+    assert warehouse_batch.quantity == 0
+    assert shipment_batch.quantity == 20
 
 
 def test_prefers_earlier_batches():
-    pytest.fail("todo")
+    tomorrow_batch = Batch(1, "SMALL-TABLE", 20, tomorrow)
+    later_batch = Batch(1, "SMALL-TABLE", 20, later)
+    order_line = OrderLine("SMALL-TABLE", 20)
+    allocate([tomorrow_batch, later_batch], order_line)
+    assert tomorrow_batch.quantity == 0
+    assert later_batch.quantity == 20
